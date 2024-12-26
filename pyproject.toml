@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "tik-tok"
+version = "0.1.0"
+description = "TikTok clone project"
+authors = ["Ilya Bochkarev"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+pydantic = "^2.10.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
