@@ -1,14 +1,32 @@
-version: "3"
+version: "3.8"
+
 services:
   app:
     build:
       context: .
-      args:
-        ENVIRONMENT: local
     env_file: .env
     ports:
       - "3000:3000"
     volumes:
       - .:/app
+    depends_on:
+      - db
+    networks:
+      - app-network
     command: >
       uvicorn tik_tok.main:app --host 0.0.0.0 --port 3000 --reload
+
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tiktok
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
