@@ -1,27 +1,29 @@
+from zoneinfo import ZoneInfo
+
+from dynaconf import Dynaconf
+from pydantic import AnyUrl
 from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
-    project_name: str
-    project_descr: str
-    app_name: str
-    app_version: str
-    app_env: str
-    log_level: str
-    timezone: str
-    debug: bool
+_settings = Dynaconf(settings_files=["config.yaml", ".env"])
 
-    class Config:
-        env_file = ".env"
+_db_dsn = AnyUrl.build(
+    scheme="postgresql+asyncpg",
+    username=_settings.database.user,
+    password=_settings.database.password,
+    host=_settings.database.host,
+    port=_settings.database.port,
+    path=_settings.database.db,
+)
+
+
+class Settings(BaseSettings):
+    app_name: str
+    app_env: str
+    db_dsn: str
 
 
 settings = Settings(
-    project_name="TikTok Clone",
-    project_descr="TikTok Tape Clone",
     app_name="TikTok Clone",
-    app_version="1.0.0",
-    app_env="development",
-    log_level="INFO",
-    timezone="Europe/Moscow",
-    debug=True
-
+    app_env=_settings.app_env,
+    db_dsn=str(_db_dsn),
 )
