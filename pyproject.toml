@@ -13,7 +13,23 @@ uvicorn = "^0.34.0"
 pydantic = "^2.10.4"
 python-dotenv = "^1.0.1"
 pydantic-settings = "^2.7.0"
+sqlalchemy = "^2.0.36"
+psycopg2-binary = "^2.9.10"
+alembic = "^1.14.0"
+dynaconf = "^3.2.6"
+asyncpg = "^0.30.0"
+greenlet = "^3.1.1"
+httpx = "^0.28.1"
+pytest = "^8.3.4"
 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-asyncio = "^0.25.0"
+httpx = "^0.28.1"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
 
 [build-system]
 requires = ["poetry-core"]
