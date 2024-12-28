@@ -2,8 +2,11 @@ app_env: dev
 mode: local
 log_level: debug
 database:
-  host: localhost
+  host: db
   port: 5432
   user: postgres
   password: password
   db: tiktok
+SECRET_KEY: "BMUJVZQZUClKl1RYbD9pcrO-Dcaby0DTjr8FdmJdhxI"
+ACCESS_TOKEN_EXPIRE_MINUTES: 30
+ALGORITHM: "HS256"
