@@ -6,14 +6,12 @@ from tik_tok.core.config import settings
 
 def make_pg_options(
     app_name: str = settings.app_name,
-    timezone: str = settings.timezone,
     statement_timeout: int = 40_000,
     lock_timeout: int = 30_000,
     idle_in_transaction_session_timeout: int = 60_000,
 ) -> dict:
     return {
         "application_name": app_name,
-        "timezone": timezone,
         "statement_timeout": str(statement_timeout),
         "lock_timeout": str(lock_timeout),
         "idle_in_transaction_session_timeout": str(idle_in_transaction_session_timeout),
