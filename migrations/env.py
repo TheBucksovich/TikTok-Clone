@@ -10,6 +10,7 @@ from alembic import context
 from tik_tok.core.config import settings
 from tik_tok.models.base import Base
 import tik_tok.models.users
+import tik_tok.models.videos
 
 # Добавление пути до папки src
 sys.path.append(str(Path(__file__).resolve().parents[1] / "src"))
