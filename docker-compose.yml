@@ -11,10 +11,13 @@ services:
       - .:/app
     depends_on:
       - db
+      - minio
+      - rabbitmq
     networks:
       - app-network
     command: >
       uvicorn tik_tok.main:app --host 0.0.0.0 --port 3000 --reload
+    
 
   db:
     image: postgres:12
@@ -27,6 +30,60 @@ services:
     networks:
       - app-network
 
+  minio:
+    image: minio/minio
+    command: server /data/tiktok-videos
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "minioadmin"
+      MINIO_ROOT_PASSWORD: "minioadmin"
+    volumes:
+      - minio-data:/data/tiktok-videos
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+  
+    ports:
+      - "5672:5672"
+      - "15672:15672" # RabbitMQ management UI
+    networks:
+      - app-network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yaml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    networks:
+      - app-network
+
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-data:
+  minio-data:
+  prometheus-data:
+  rabbitmq-data:
