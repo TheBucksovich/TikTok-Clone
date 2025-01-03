@@ -34,9 +34,7 @@ WORKDIR /app
 
 COPY poetry.lock pyproject.toml /app/
 
-RUN poetry install \
-    $(if [ "$ENVIRONMENT" = 'production' ]; then echo '--no-dev'; fi) \
-    --no-interaction --no-ansi
+RUN poetry install --only main --no-interaction --no-ansi
 
 COPY ./src /app/src
 
