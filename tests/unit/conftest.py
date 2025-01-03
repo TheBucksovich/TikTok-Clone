@@ -6,13 +6,29 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import delete
 
+from tik_tok.core.s3_client import S3Client
 from tik_tok.main import app
 from tik_tok.models.base import Base
 from tik_tok.models.users import User
 from tik_tok.core.database import get_async_session
+from tik_tok.tasks.video_tasks import s3_bucket_service_factory
 
-# Тестовая база данных (на диске, чтобы она была доступна для нескольких соединений)
 TEST_DATABASE_URL = "sqlite+aiosqlite:///test_db.sqlite"
+
+
+@pytest.fixture
+async def setup_s3():
+    for test_file in TEST_DATABASE_URL:
+        await S3Client.upload_file(test_file, f"uploads/{test_file}")
+    yield
+    # Удаляем тестовые файлы
+    for test_file in TEST_DATABASE_URL:
+        await S3Client.delete_file(f"uploads/{test_file}")
+
+
+@pytest.fixture
+def test_video_file():
+    return "test_video.mp4"
 
 
 @pytest_asyncio.fixture
@@ -56,3 +72,10 @@ async def setup_db(test_db):
         await session.execute(delete(User))
         await session.commit()
     yield
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_minio():
+    # Подключение к MinIO
+    s3_service = s3_bucket_service_factory(".env")
+    s3_service.create_s3_client()
