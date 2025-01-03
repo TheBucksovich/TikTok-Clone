@@ -10,3 +10,7 @@ database:
 SECRET_KEY: "BMUJVZQZUClKl1RYbD9pcrO-Dcaby0DTjr8FdmJdhxI"
 ACCESS_TOKEN_EXPIRE_MINUTES: 30
 ALGORITHM: "HS256"
+bucket_name: tiktok-videos
+endpoint: http://minio:9000
+access_key: minioadmin
+secret_key: minioadmin
